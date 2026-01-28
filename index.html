@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova AI Voice | Dental & Orthodontic AI Receptionist</title>
+    <meta name="description" content="Stop losing patients to missed calls. Nova AI Voice answers 24/7.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            DEFAULT: '#FF6A00', // Vivid Orange
+                            hover: '#E65F00',
+                            light: '#FFB000', // Amber Accent
+                            dark: '#CC5500',
+                        },
+                        bg: {
+                            main: '#07080B', // Near Black
+                            card: '#111216',
+                            glass: 'rgba(255, 255, 255, 0.03)',
+                        },
+                        text: {
+                            main: '#EDEFF3',
+                            muted: '#9AA3B2',
+                        }
+                    },
+                    backgroundImage: {
+                        'hero-glow': 'radial-gradient(circle at center, rgba(255, 106, 0, 0.15) 0%, rgba(7, 8, 11, 0) 70%)',
+                        'card-glow': 'linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Utilities */
+        body {
+            background-color: #07080B;
+            color: #EDEFF3;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 106, 0, 0.3);
+        }
+        
+        /* Toggle Switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #FF6A00;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #FF6A00;
+        }
+        
+        /* Smooth Scroll Padding for Sticky Header */
+        section {
+            scroll-margin-top: 5rem;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #07080B; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF6A00; 
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
