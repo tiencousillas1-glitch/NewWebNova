@@ -1253,3 +1253,5 @@ const App = () => {
 
 const root = createRoot(document.getElementById('root')!);
 root.render(<App />);
+
+// Forced clean build for Vercel production deployment
