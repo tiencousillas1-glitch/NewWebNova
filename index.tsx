@@ -458,7 +458,61 @@ const AssessmentResults = ({ data, results, onBookDemo }: {
 
 
 
+
 const App = () => {
+  // Safer Widget Relocation Logic
+  useEffect(() => {
+    const i = setInterval(() => {
+      const m = document.getElementById('demo-widget-mount');
+      if (!m) return;
+
+      // --- PART 1: MOVE WIDGET ---
+      let w: Element | null = null;
+
+      // Explicit search for Nedzo widget
+      const selectors = ['nedzo-widget', '.nedzo-widget', '#nedzo-widget', '[class*="nedzo"]', '[id*="nedzo"]'];
+      for (const s of selectors) {
+        const found = document.querySelector(s);
+        if (found && !m.contains(found)) { w = found; break; }
+      }
+
+      // Move widget if found and not already in mount
+      if (w && m && w.parentNode !== m) {
+        m.appendChild(w);
+
+        // Hide the loading state / placeholder button once widget is moved
+        const loadingState = m.querySelector('.loading-state');
+        if (loadingState && loadingState instanceof HTMLElement) {
+          loadingState.style.display = 'none';
+        }
+
+        if (w instanceof HTMLElement) {
+          // Let the parent flex container center it.
+          // Reset positioning to avoid creating a new stacking context that breaks "position: fixed" (calendar)
+          w.style.position = 'relative';
+          w.style.transform = 'none';
+
+          w.style.top = 'auto';
+          w.style.left = 'auto';
+          w.style.margin = 'auto';
+          w.style.zIndex = '10';
+
+          // Do NOT aggressively reset children styles
+        }
+      }
+
+      // If widget is already in mount, ensure loading state is hidden
+      if (w && m.contains(w)) {
+        const loadingState = m.querySelector('.loading-state');
+        if (loadingState && loadingState instanceof HTMLElement) {
+          loadingState.style.display = 'none';
+        }
+      }
+
+    }, 1000); // Check every second
+    return () => clearInterval(i);
+  }, []);
+
 
 
 
@@ -771,7 +825,7 @@ const App = () => {
               {/* Glow behind */}
               <div className="absolute -inset-1 bg-gradient-to-r from-brand via-purple-500 to-brand rounded-[2.5rem] blur opacity-20 animate-bg-pan"></div>
 
-              <div id="demo-widget-mount" className="relative h-80 w-full flex flex-col items-center justify-center bg-[#0B0F19]/80 backdrop-blur-2xl rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden group">
+              <div id="demo-widget-mount" className="relative h-80 w-full flex flex-col items-center justify-center bg-[#0B0F19]/80 backdrop-blur-2xl rounded-[2rem] border border-white/10 shadow-2xl group" style={{ overflow: 'visible' }}>
 
                 {/* Interactive Trigger Button */}
                 <button
