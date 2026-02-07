@@ -773,11 +773,27 @@ const App = () => {
 
               <div id="demo-widget-mount" className="relative h-80 w-full flex flex-col items-center justify-center bg-[#0B0F19]/80 backdrop-blur-2xl rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden group">
 
-                {/* Initial Placeholder State (Visible before widget moves) */}
-                <div className="loading-state absolute inset-0 flex flex-col items-center justify-center text-text-muted/50 pointer-events-none z-0">
-                  <div className="relative">
-                    <div className="w-24 h-24 rounded-full bg-brand/5 border border-brand/10 flex items-center justify-center mb-6">
-                      <svg className="w-10 h-10 text-brand/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {/* Interactive Trigger Button */}
+                <button
+                  onClick={() => {
+                    // 1. Try finding the widget button (usually an iframe or a specific div)
+                    const widget = document.querySelector('nedzo-widget') || document.querySelector('.nedzo-widget-button');
+                    if (widget instanceof HTMLElement) {
+                      widget.click();
+                    } else {
+                      // Fallback: Dispatch a custom event or try standard selector if known
+                      const iframe = document.querySelector('iframe[src*="nedzo"]');
+                      if (iframe instanceof HTMLElement) {
+                        // Some widgets attach listener to the iframe container
+                        iframe.click();
+                      }
+                    }
+                  }}
+                  className="loading-state absolute inset-0 flex flex-col items-center justify-center text-text-muted/50 z-10 cursor-pointer hover:bg-white/5 transition-all group-hover:scale-105"
+                >
+                  <div className="relative pointer-events-none">
+                    <div className="w-24 h-24 rounded-full bg-brand/5 border border-brand/10 flex items-center justify-center mb-6 group-hover:bg-brand/20 transition-colors">
+                      <svg className="w-10 h-10 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                       </svg>
                     </div>
@@ -785,8 +801,8 @@ const App = () => {
                     <div className="absolute inset-0 border border-brand/20 rounded-full animate-[ping_3s_linear_infinite] opacity-20"></div>
                     <div className="absolute -inset-4 border border-white/5 rounded-full animate-[ping_4s_linear_infinite_1s] opacity-10"></div>
                   </div>
-                  <p className="animate-pulse font-mono text-xs tracking-widest uppercase text-brand">Initializing Orthodontic Secure Line...</p>
-                </div>
+                  <p className="font-mono text-xs tracking-widest uppercase text-brand font-bold group-hover:text-white transition-colors">Tap to Start Call</p>
+                </button>
 
               </div>
             </div>
