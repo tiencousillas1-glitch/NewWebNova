@@ -837,9 +837,27 @@ const App = () => {
                 {/* Interactive Trigger Button (Placeholder) */}
                 <button
                   onClick={() => {
-                    const selector = 'nedzo-widget, .nedzo-widget, #nedzo-widget, iframe[src*="nedzo"]';
-                    const widget = document.querySelector(selector) as HTMLElement;
-                    if (widget) widget.click();
+                    // Try multiple selectors to match the widget instance
+                    const selectors = ['nedzo-widget', '.nedzo-widget', '#nedzo-widget', 'iframe[src*="nedzo"]'];
+                    let widget: HTMLElement | null = null;
+
+                    for (const s of selectors) {
+                      const found = document.querySelector(s);
+                      if (found instanceof HTMLElement) {
+                        widget = found;
+                        break;
+                      }
+                    }
+
+                    if (widget) {
+                      widget.click();
+                      // Force focus to ensure keyboard/voice events are captured
+                      widget.focus();
+                    } else {
+                      console.warn("Nedzo widget not found for click trigger");
+                      // Fallback: Dispatch a custom event if the widget listens for one (common pattern)
+                      window.dispatchEvent(new CustomEvent('nedzo-open'));
+                    }
                   }}
                   className="loading-state flex flex-col items-center justify-center text-text-muted/50 cursor-pointer hover:bg-white/5 transition-all rounded-3xl p-8"
                 >
