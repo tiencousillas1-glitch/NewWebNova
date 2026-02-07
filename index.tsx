@@ -460,59 +460,7 @@ const AssessmentResults = ({ data, results, onBookDemo }: {
 
 
 const App = () => {
-  // Safer Widget Relocation Logic
-  useEffect(() => {
-    const i = setInterval(() => {
-      const m = document.getElementById('demo-widget-mount');
-      if (!m) return;
-
-      // --- PART 1: MOVE WIDGET ---
-      let w: Element | null = null;
-
-      // Explicit search for Nedzo widget
-      const selectors = ['nedzo-widget', '.nedzo-widget', '#nedzo-widget', '[class*="nedzo"]', '[id*="nedzo"]'];
-      for (const s of selectors) {
-        const found = document.querySelector(s);
-        if (found && !m.contains(found)) { w = found; break; }
-      }
-
-      // Move widget if found and not already in mount
-      if (w && m && w.parentNode !== m) {
-        m.appendChild(w);
-
-        // Hide the loading state / placeholder button once widget is moved
-        const loadingState = m.querySelector('.loading-state');
-        if (loadingState && loadingState instanceof HTMLElement) {
-          loadingState.style.display = 'none';
-        }
-
-        if (w instanceof HTMLElement) {
-          // Force it to be a relative block inside our flex container
-          w.style.position = 'relative';
-          w.style.transform = 'none';
-          // Unset default fixed positioning that keeps it in the corner
-          w.style.bottom = 'auto';
-          w.style.right = 'auto';
-          w.style.top = 'auto';
-          w.style.left = 'auto';
-
-          w.style.margin = '0 auto'; // Horizontal centering
-          w.style.zIndex = '20'; // Higher than the glass background
-          w.style.display = 'block'; // Ensure it behaves like a block for margin: auto
-        }
-      }
-
-      // If widget is already in mount, ensure loading state is hidden
-      if (w && m.contains(w)) {
-        const loadingState = m.querySelector('.loading-state');
-        if (loadingState && loadingState instanceof HTMLElement) {
-          loadingState.style.display = 'none';
-        }
-      }
-
-    }, 1000); // Check every second
-    return () => clearInterval(i);
-  }, []);
+  // Widget relocation logic removed to restore stability.
 
 
 
