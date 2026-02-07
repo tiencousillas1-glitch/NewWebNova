@@ -459,112 +459,7 @@ const AssessmentResults = ({ data, results, onBookDemo }: {
 
 
 const App = () => {
-  // Widget Relocation Logic (Enhanced for Premium UI)
-  useEffect(() => {
-    const i = setInterval(() => {
-      const m = document.getElementById('demo-widget-mount');
-      if (!m) return;
 
-      // --- PART 1: MOVE WIDGET ---
-      let w: Element | null = null;
-
-      // Explicit search
-      const selectors = ['nedzo-widget', '.nedzo-widget', '#nedzo-widget', '[class*="nedzo"]', '[id*="nedzo"]'];
-      for (const s of selectors) {
-        const found = document.querySelector(s);
-        if (found && !m.contains(found)) { w = found; break; }
-      }
-
-      // Heuristic search
-      if (!w) {
-        Array.from(document.body.children).forEach(el => {
-          if (w) return;
-          const tag = el.tagName.toUpperCase();
-          if (['SCRIPT', 'STYLE', 'LINK', 'META', 'NOSCRIPT'].includes(tag)) return;
-          if (el.id === 'root' || el.id === '__next' || el.id === 'demo-widget-mount') return;
-
-          // Content Safety Check
-          const txt = el.textContent || "";
-          if (txt.includes('.vapi-btn') || txt.includes('*/') || txt.includes('important;')) return;
-
-          const style = window.getComputedStyle(el);
-          if (style.position === 'fixed') {
-            const rect = el.getBoundingClientRect();
-            // Basic check if it looks like a floating widget
-            if (rect.width > 0 && rect.height > 0 && rect.top > window.innerHeight * 0.5 && rect.left > window.innerWidth * 0.5) {
-              w = el;
-            }
-          }
-        });
-      }
-
-      if (w && m && w.parentNode !== m) {
-        m.appendChild(w);
-        if (w instanceof HTMLElement) {
-          // Apply Premium Styles to Widget Wrapper
-          // Force layout reset
-          w.style.cssText = `
-            position: absolute !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) scale(1.3) !important;
-            margin: 0 !important;
-            bottom: auto !important;
-            right: auto !important;
-            width: auto !important;
-            height: auto !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            filter: drop-shadow(0 0 30px rgba(255, 106, 0, 0.3));
-            z-index: 100 !important;
-            pointer-events: auto !important;
-          `;
-
-          // AGGRESSIVE: Force all children to reset position
-          // This fixes the issue where the inner button is absolutely positioned to the bottom-right
-          Array.from(w.children).forEach((child) => {
-            if (child instanceof HTMLElement) {
-              child.style.position = 'relative';
-              child.style.top = 'auto';
-              child.style.left = 'auto';
-              child.style.bottom = 'auto';
-              child.style.right = 'auto';
-              child.style.margin = '0';
-
-            }
-          });
-        }
-      }
-
-      // --- PART 2: CLEANUP GARBAGE ---
-      Array.from(m.children).forEach(child => {
-        if (child === w) return; // Preserve the real widget
-
-        // 1. Kill Style tags
-        if (child.tagName === 'STYLE') {
-          child.setAttribute('style', 'display: none !important');
-          child.innerHTML = '';
-        }
-
-        // 2. Kill Text Garbage
-        if (child.textContent && (child.textContent.includes('.vapi-btn') || child.textContent.includes('*/'))) {
-          if (child instanceof HTMLElement) {
-            child.style.display = 'none';
-            child.innerHTML = '';
-            child.remove();
-          }
-        }
-
-        // 3. Hide loading placeholder only if we found the widget
-        if (w && child.className && typeof child.className === 'string' && child.className.includes('loading-state')) {
-          (child as HTMLElement).style.display = 'none';
-        }
-      });
-
-    }, 800);
-    return () => clearInterval(i);
-  }, []);
 
 
 
@@ -723,13 +618,14 @@ const App = () => {
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <div
-              className="flex items-center gap-2 cursor-pointer group"
+              className="flex items-center cursor-pointer group py-2"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
-              <div className="w-10 h-10 bg-gradient-to-br from-brand to-brand-light rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-[0_0_20px_rgba(255,106,0,0.4)] group-hover:shadow-[0_0_30px_rgba(255,106,0,0.6)] transition-all duration-500">
-                N
-              </div>
-              <span className="text-xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors">Nova <span className="gradient-text font-black">AI Voice</span></span>
+              <img
+                src="/logo.png"
+                alt="Nova AI Voice"
+                className="h-20 w-auto object-contain transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_25px_rgba(255,106,0,0.5)] mix-blend-screen"
+              />
             </div>
 
             {/* Desktop Nav */}
