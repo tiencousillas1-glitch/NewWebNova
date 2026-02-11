@@ -625,9 +625,9 @@ const App = () => {
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
               <img
-                src="/logo.png"
+                src="/logo_final.png?v=2"
                 alt="Nova AI Voice"
-                className="h-20 w-auto object-contain transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_25px_rgba(255,106,0,0.5)] mix-blend-screen"
+                className="h-14 w-auto object-contain transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_25px_rgba(255,106,0,0.5)]"
               />
             </div>
 
@@ -723,7 +723,10 @@ const App = () => {
             {/* CTA Buttons */}
             <div className="mt-10 flex flex-col sm:flex-row gap-6 w-full max-w-md mx-auto sm:max-w-none justify-center">
               <button
-                onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => {
+                  document.getElementById('live-demo')?.scrollIntoView({ behavior: 'smooth' });
+                  setTimeout(() => document.getElementById('start-demo-btn')?.focus(), 800);
+                }}
                 className="group relative flex items-center justify-center gap-3 px-8 py-5 bg-brand hover:bg-brand-hover text-white text-lg font-bold rounded-2xl shadow-[0_0_40px_rgba(255,106,0,0.3)] hover:shadow-[0_0_60px_rgba(255,106,0,0.5)] transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:animate-shimmer"></div>
@@ -766,7 +769,7 @@ const App = () => {
 
             {/* Clarification Text */}
             <p className="text-sm text-text-muted/60 mb-8 font-medium">
-              This is a live demo experience. Chloe represents one of Nova’s AI receptionists.
+              This is a live voice demo. Appointment booking is disabled in this experience. Use it to test call quality, speed, and how Nova handles real patient conversations.
             </p>
 
 
@@ -783,43 +786,51 @@ const App = () => {
               <div id="demo-widget-mount" className="relative z-10 w-full h-full flex flex-col items-center justify-center p-4">
 
                 {/* Interactive Trigger Button (Placeholder) */}
+                {/* Interactive Trigger Button */}
                 <button
+                  id="start-demo-btn"
                   onClick={() => {
-                    // Try multiple selectors to match the widget instance
-                    const selectors = ['nedzo-widget', '.nedzo-widget', '#nedzo-widget', 'iframe[src*="nedzo"]'];
-                    let widget: HTMLElement | null = null;
+                    const findAndClickWidget = (attempts = 0) => {
+                      // 1. Try accessing via Shadow DOM (Correct Path found in testing)
+                      const container = document.querySelector('#nedzo-widget-container');
+                      let widgetBtn: HTMLElement | null = null;
 
-                    for (const s of selectors) {
-                      const found = document.querySelector(s);
-                      if (found instanceof HTMLElement) {
-                        widget = found;
-                        break;
+                      if (container && container.shadowRoot) {
+                        widgetBtn = container.shadowRoot.querySelector('button[aria-label="Talk to Chloe"]');
                       }
-                    }
 
-                    if (widget) {
-                      widget.click();
-                      // Force focus to ensure keyboard/voice events are captured
-                      widget.focus();
-                    } else {
-                      console.warn("Nedzo widget not found for click trigger");
-                      // Fallback: Dispatch a custom event if the widget listens for one (common pattern)
-                      window.dispatchEvent(new CustomEvent('nedzo-open'));
-                    }
+                      // 2. Fallback: Try standard selectors if Shadow DOM method fails
+                      if (!widgetBtn) {
+                        const selectors = ['iframe[src*="nedzo"]', 'div[id*="nedzo"] button'];
+                        for (const s of selectors) {
+                          const found = document.querySelector(s);
+                          if (found instanceof HTMLElement) widgetBtn = found;
+                          if (widgetBtn) break;
+                        }
+                      }
+
+                      if (widgetBtn) {
+                        widgetBtn.click();
+                        console.log("Nedzo widget clicked successfully");
+                      } else if (attempts < 10) {
+                        // Retry every 500ms if not found (widget might be loading)
+                        console.log(`Widget not found, retrying... (${attempts + 1}/10)`);
+                        setTimeout(() => findAndClickWidget(attempts + 1), 500);
+                      } else {
+                        console.warn("Nedzo widget not found after retries. Opening fallback.");
+                        // Final Fallback: Dispatch event
+                        window.dispatchEvent(new CustomEvent('nedzo-open'));
+                        alert("The AI agent is loading. Please try again in a moment.");
+                      }
+                    };
+
+                    findAndClickWidget();
                   }}
-                  className="loading-state flex flex-col items-center justify-center text-text-muted/50 cursor-pointer hover:bg-white/5 transition-all rounded-3xl p-8"
+                  className="group relative flex items-center justify-center gap-3 px-10 py-6 bg-brand hover:bg-brand-hover text-white text-xl font-black rounded-full shadow-[0_0_50px_rgba(255,106,0,0.4)] hover:shadow-[0_0_70px_rgba(255,106,0,0.6)] transition-all duration-300 transform hover:-translate-y-1 overflow-hidden focus:outline-none focus:ring-4 focus:ring-brand/50"
                 >
-                  <div className="relative pointer-events-none">
-                    <div className="w-24 h-24 rounded-full bg-brand/5 border border-brand/10 flex items-center justify-center mb-6">
-                      <svg className="w-10 h-10 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                      </svg>
-                    </div>
-                    {/* Ring Animations */}
-                    <div className="absolute inset-0 border border-brand/20 rounded-full animate-[ping_3s_linear_infinite] opacity-20"></div>
-                    <div className="absolute -inset-4 border border-white/5 rounded-full animate-[ping_4s_linear_infinite_1s] opacity-10"></div>
-                  </div>
-                  <p className="font-mono text-xs tracking-widest uppercase text-brand font-bold">Tap to Start Call</p>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:animate-shimmer"></div>
+                  <Phone className="w-6 h-6 animate-pulse" />
+                  <span>Start Demo Call</span>
                 </button>
 
               </div>
