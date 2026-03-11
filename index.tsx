@@ -1109,7 +1109,7 @@ const App = () => {
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-brand to-transparent opacity-50"></div>
 
                   {formState === 'success' ? (
-                    <div className="absolute inset-0 bg-[#0A0B10] flex flex-col items-center justify-center text-center p-8 z-20 animate-[fadeIn_0.5s_ease-out]">
+                    <div className="flex flex-col items-center justify-center text-center py-6 z-20 animate-[fadeIn_0.5s_ease-out]">
                       <div className="w-20 h-20 bg-green-500/10 border border-green-500/20 text-green-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
                         <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                       </div>
@@ -1146,23 +1146,23 @@ const App = () => {
 
                         <div>
                           <label htmlFor="calendar" className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Current Calendar System</label>
-                          <select id="calendar" className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all appearance-none cursor-pointer">
-                            <option value="" disabled selected>Select System...</option>
-                            <option>Google Calendar</option>
-                            <option>Outlook / Office 365</option>
-                            <option>iCloud</option>
-                            <option>Paper Agenda</option>
-                            <option>Other</option>
+                          <select id="calendar" defaultValue="" className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all appearance-none cursor-pointer">
+                            <option value="" disabled className="bg-[#0A0B10] text-gray-500">Select System...</option>
+                            <option value="Google Calendar" className="bg-[#0A0B10] text-white">Google Calendar</option>
+                            <option value="Outlook / Office 365" className="bg-[#0A0B10] text-white">Outlook / Office 365</option>
+                            <option value="iCloud" className="bg-[#0A0B10] text-white">iCloud</option>
+                            <option value="Paper Agenda" className="bg-[#0A0B10] text-white">Paper Agenda</option>
+                            <option value="Other" className="bg-[#0A0B10] text-white">Other</option>
                           </select>
                         </div>
 
                         <div>
                           <label htmlFor="volume" className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Monthly Patient Volume</label>
-                          <select id="volume" className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all appearance-none cursor-pointer">
-                            <option value="" disabled selected>Select Volume...</option>
-                            <option>Startup (0-200)</option>
-                            <option>Growing (200-1000)</option>
-                            <option>High Volume (1000+)</option>
+                          <select id="volume" defaultValue="" className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all appearance-none cursor-pointer">
+                            <option value="" disabled className="bg-[#0A0B10] text-gray-500">Select Volume...</option>
+                            <option value="Startup (0-200)" className="bg-[#0A0B10] text-white">Startup (0-200)</option>
+                            <option value="Growing (200-1000)" className="bg-[#0A0B10] text-white">Growing (200-1000)</option>
+                            <option value="High Volume (1000+)" className="bg-[#0A0B10] text-white">High Volume (1000+)</option>
                           </select>
                         </div>
 
