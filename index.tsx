@@ -1058,7 +1058,61 @@ const App = () => {
           </div>
         </section >
 
-        {/* 8) FOOTER WITH FORM */}
+        {/* 8) FAQ SECTION */}
+        <section id="faq" className="py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand/3 to-transparent pointer-events-none"></div>
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center mb-16">
+              <div className="inline-block px-4 py-1 rounded-full border border-brand/20 bg-brand/5 backdrop-blur-sm mb-6">
+                <span className="text-brand font-bold tracking-widest uppercase text-xs">FAQ</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Frequently Asked Questions</h2>
+              <p className="text-text-muted text-lg">Everything you need to know about Nova AI Voice before getting started.</p>
+            </div>
+            <div className="space-y-4">
+              {[
+                {
+                  q: "What exactly is Nova AI Voice?",
+                  a: "Nova AI Voice is an AI-powered phone receptionist built specifically for orthodontic and dental practices. It answers every inbound call instantly, 24 hours a day, 7 days a week — including nights, weekends, and holidays. Nova greets callers professionally, collects patient information, verifies insurance details, answers common questions about Invisalign and braces, and books New Patient Exam appointments directly into your calendar without any staff involvement."
+                },
+                {
+                  q: "Is Nova AI Voice HIPAA compliant?",
+                  a: "Yes. Nova AI Voice is built to meet HIPAA compliance requirements. All patient data is handled with secure, encrypted protocols. We implement strict data handling policies to ensure that protected health information (PHI) is never stored or transmitted in an unauthorized manner. You can confidently use Nova in a clinical environment without compromising your compliance obligations."
+                },
+                {
+                  q: "Which practice management systems does Nova integrate with?",
+                  a: "Nova integrates natively with Google Calendar, Microsoft Outlook, Apple iCloud, Jane App, and Cliniko for real-time appointment booking. Our team can also configure custom integrations during your onboarding. The 48-hour custom demo we build for you is specifically configured to sync with your existing calendar system at no cost."
+                },
+                {
+                  q: "How long does it take to set up Nova for my practice?",
+                  a: "Setup takes less than 48 hours. After you book a strategy call, our team builds a fully functional AI receptionist trained on your clinic's specific information — your hours, insurance policies, services, and frequently asked questions. You review it, approve it, and go live. There is no technical work required on your end. Most practices are fully operational within two business days."
+                },
+                {
+                  q: "What languages does Nova speak?",
+                  a: "Nova supports multilingual conversations and can switch seamlessly between English, Spanish, and other key languages mid-call. This allows you to serve your entire community — including Spanish-speaking families — without needing bilingual staff on call 24/7. Language detection is automatic based on how the caller speaks."
+                },
+                {
+                  q: "What happens if Nova can't answer a question?",
+                  a: "Nova is trained to handle the vast majority of common patient inquiries — scheduling, insurance questions, directions, pricing, and treatment options. In the rare case where a caller has a complex clinical question, Nova collects their details and notifies your team with a full transcript so you can follow up promptly. Nova never leaves a caller hanging."
+                },
+                {
+                  q: "Can I try Nova before committing to a plan?",
+                  a: "Absolutely. We offer a completely free 48-hour custom demo built specifically for your clinic — no credit card required. You can speak with the AI, test its responses, and see exactly how it handles your real patient scenarios before making any decision. Growth and Pro plans also include a full 14-day live trial after setup."
+                }
+              ].map((item, i) => (
+                <details key={i} className="glass-card rounded-2xl group">
+                  <summary className="flex items-center justify-between px-6 py-5 cursor-pointer list-none">
+                    <span className="font-semibold text-white text-lg pr-4">{item.q}</span>
+                    <span className="text-brand text-2xl flex-shrink-0 transition-transform duration-200 group-open:rotate-45">+</span>
+                  </summary>
+                  <p className="px-6 pb-6 text-text-muted leading-relaxed">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 9) FOOTER WITH FORM */}
         < footer className="bg-[#050608] pt-20 pb-12 border-t border-white/5 relative overflow-hidden" id="demo" >
           {/* Ambient Background Glow for Footer */}
           < div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-brand/5 rounded-full blur-[120px] pointer-events-none" ></div >
@@ -1186,13 +1240,113 @@ const App = () => {
 
             </div>
           </div>
+          {/* Bottom Bar */}
+          <div className="mt-16 pt-8 border-t border-white/5">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-text-muted text-sm">© 2025 Nova AI Voice. All rights reserved. HIPAA Compliant.</p>
+              <div className="flex flex-wrap items-center gap-6 text-sm text-text-muted">
+                <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
+                <span className="text-white/20">|</span>
+                <span className="text-white/40 text-xs">Integrates with:</span>
+                <a href="https://workspace.google.com/products/calendar/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Google Calendar</a>
+                <a href="https://www.jane.app/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Jane App</a>
+                <a href="https://www.cliniko.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cliniko</a>
+              </div>
+            </div>
+          </div>
         </footer >
       </main >
     </div >
   );
 };
 
+// --- Privacy Policy Page ---
+const PrivacyPage = () => (
+  <div className="min-h-screen bg-[#07080B] text-white font-sans">
+    <header className="border-b border-white/5 py-6 px-8">
+      <a href="/" className="text-brand font-bold text-lg hover:opacity-80 transition-opacity">← Nova AI Voice</a>
+    </header>
+    <main className="max-w-3xl mx-auto px-6 py-16">
+      <h1 className="text-4xl font-black mb-4">Privacy Policy</h1>
+      <p className="text-text-muted mb-10 text-sm">Last updated: April 27, 2025</p>
+      <div className="space-y-8 text-text-muted leading-relaxed">
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">1. Information We Collect</h2>
+          <p>Nova AI Voice collects information you provide when scheduling a strategy call or demo, including your name, work email, practice name, and calendar system preference. We also collect call data processed through our AI voice agents on behalf of your practice, which may include protected health information (PHI).</p>
+        </section>
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">2. HIPAA Compliance</h2>
+          <p>Nova AI Voice operates in compliance with the Health Insurance Portability and Accountability Act (HIPAA). We act as a Business Associate under HIPAA when processing PHI on behalf of covered entities. A Business Associate Agreement (BAA) is available and required for all clinical deployments. PHI is encrypted in transit and at rest, and is never sold or used for advertising purposes.</p>
+        </section>
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">3. How We Use Your Information</h2>
+          <p>We use collected information to provide and improve our AI receptionist service, communicate with you about your account or demo, and send relevant product updates with your consent. We do not sell personal data to third parties.</p>
+        </section>
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">4. Data Retention</h2>
+          <p>Call recordings and transcripts are retained for a period defined in your service agreement. You may request deletion of your data at any time by contacting us. Practice data is permanently deleted within 30 days of account termination.</p>
+        </section>
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">5. Third-Party Integrations</h2>
+          <p>Nova integrates with third-party calendar systems including Google Calendar, Microsoft Outlook, Apple iCloud, Jane App, and Cliniko. Data shared with these systems is governed by their respective privacy policies. We only transmit the minimum data necessary to complete appointment bookings.</p>
+        </section>
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">6. Contact</h2>
+          <p>For privacy-related inquiries, data deletion requests, or BAA execution, please contact us via the strategy call form on our website at <a href="/" className="text-brand hover:underline">novaaivoice.com</a>.</p>
+        </section>
+      </div>
+    </main>
+  </div>
+);
+
+// --- Terms of Service Page ---
+const TermsPage = () => (
+  <div className="min-h-screen bg-[#07080B] text-white font-sans">
+    <header className="border-b border-white/5 py-6 px-8">
+      <a href="/" className="text-brand font-bold text-lg hover:opacity-80 transition-opacity">← Nova AI Voice</a>
+    </header>
+    <main className="max-w-3xl mx-auto px-6 py-16">
+      <h1 className="text-4xl font-black mb-4">Terms of Service</h1>
+      <p className="text-text-muted mb-10 text-sm">Last updated: April 27, 2025</p>
+      <div className="space-y-8 text-text-muted leading-relaxed">
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">1. Service Description</h2>
+          <p>Nova AI Voice provides AI-powered voice receptionist services for orthodontic and dental practices. By subscribing to any plan, you agree to these Terms of Service. The service includes inbound call handling, patient qualification, appointment booking, and reactivation campaigns as described in your selected plan.</p>
+        </section>
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">2. Subscription & Billing</h2>
+          <p>All plans require a one-time setup fee of $297. Monthly subscriptions are billed on the first day of each billing cycle. Yearly subscriptions receive a 20% discount. Minutes reset monthly and do not roll over. Additional minutes are available as add-ons on Growth and Pro plans. You may cancel at any time with 30 days' written notice.</p>
+        </section>
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">3. Acceptable Use</h2>
+          <p>You agree to use Nova AI Voice exclusively for lawful purposes within a licensed healthcare practice. You are responsible for ensuring your use of the service complies with applicable laws and regulations, including HIPAA, and that appropriate consent is obtained from patients regarding AI-assisted call handling.</p>
+        </section>
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">4. Limitation of Liability</h2>
+          <p>Nova AI Voice is a supplemental communication tool and does not replace clinical judgment or emergency services. We are not liable for missed appointments, patient outcomes, or revenue loss arising from service interruptions. Our maximum liability is limited to the monthly subscription fees paid in the 30 days preceding any claim.</p>
+        </section>
+        <section>
+          <h2 className="text-xl font-bold text-white mb-3">5. Modifications</h2>
+          <p>We reserve the right to update these terms with 30 days' prior notice. Continued use of the service after notification constitutes acceptance of the updated terms.</p>
+        </section>
+      </div>
+    </main>
+  </div>
+);
+
+// --- Router ---
+const pathname = window.location.pathname;
+let AppToRender: React.FC;
+if (pathname === '/privacy') {
+  AppToRender = PrivacyPage;
+} else if (pathname === '/terms') {
+  AppToRender = TermsPage;
+} else {
+  AppToRender = App;
+}
+
 const root = createRoot(document.getElementById('root')!);
-root.render(<App />);
+root.render(<AppToRender />);
 
 // Forced clean build for Vercel production deployment
