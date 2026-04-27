@@ -626,7 +626,9 @@ const App = () => {
             >
               <img
                 src="/logo_final.png?v=2"
-                alt="Nova AI Voice"
+                alt="Nova AI Voice — AI Receptionist for Orthodontists"
+                width="56"
+                height="56"
                 className="h-14 w-auto object-contain transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_25px_rgba(255,106,0,0.5)]"
               />
             </div>
@@ -1261,8 +1263,37 @@ const App = () => {
   );
 };
 
+// --- SEO helper for sub-pages ---
+const updatePageMeta = (title: string, description: string, canonicalPath: string) => {
+  document.title = title;
+  const setMeta = (selector: string, attr: string, content: string) => {
+    let el = document.querySelector(selector) as HTMLMetaElement | HTMLLinkElement | null;
+    if (!el) {
+      const tag = selector.startsWith('link') ? 'link' : 'meta';
+      el = document.createElement(tag) as any;
+      const match = selector.match(/\[([\w-]+)="([^"]+)"\]/);
+      if (match) (el as any).setAttribute(match[1], match[2]);
+      document.head.appendChild(el);
+    }
+    el.setAttribute(attr, content);
+  };
+  setMeta('meta[name="description"]', 'content', description);
+  setMeta('link[rel="canonical"]', 'href', `https://novaaivoice.com${canonicalPath}`);
+  setMeta('meta[property="og:title"]', 'content', title);
+  setMeta('meta[property="og:description"]', 'content', description);
+  setMeta('meta[property="og:url"]', 'content', `https://novaaivoice.com${canonicalPath}`);
+};
+
 // --- Privacy Policy Page ---
-const PrivacyPage = () => (
+const PrivacyPage = () => {
+  React.useEffect(() => {
+    updatePageMeta(
+      'Privacy Policy | Nova AI Voice',
+      'Privacy Policy for Nova AI Voice. Learn how we handle patient data, HIPAA compliance, and data retention for our AI receptionist service.',
+      '/privacy'
+    );
+  }, []);
+  return (
   <div className="min-h-screen bg-[#07080B] text-white font-sans">
     <header className="border-b border-white/5 py-6 px-8">
       <a href="/" className="text-brand font-bold text-lg hover:opacity-80 transition-opacity">← Nova AI Voice</a>
@@ -1298,10 +1329,19 @@ const PrivacyPage = () => (
       </div>
     </main>
   </div>
-);
+  );
+};
 
 // --- Terms of Service Page ---
-const TermsPage = () => (
+const TermsPage = () => {
+  React.useEffect(() => {
+    updatePageMeta(
+      'Terms of Service | Nova AI Voice',
+      'Terms of Service for Nova AI Voice. Subscription, billing, acceptable use, and limitation of liability for our AI receptionist service.',
+      '/terms'
+    );
+  }, []);
+  return (
   <div className="min-h-screen bg-[#07080B] text-white font-sans">
     <header className="border-b border-white/5 py-6 px-8">
       <a href="/" className="text-brand font-bold text-lg hover:opacity-80 transition-opacity">← Nova AI Voice</a>
@@ -1333,7 +1373,8 @@ const TermsPage = () => (
       </div>
     </main>
   </div>
-);
+  );
+};
 
 // --- Router ---
 const pathname = window.location.pathname;
