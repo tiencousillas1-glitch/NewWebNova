@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
-import { Phone, ArrowRight, Play, ShieldCheck, Smile, Calendar, MessageSquare, Clock, Database, Globe } from 'lucide-react';
+import { Phone, ArrowRight, Calendar, MessageSquare } from 'lucide-react';
 
 // --- Supabase Client ---
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://rmvlncyhsfurhmmekguh.supabase.co";
@@ -111,7 +111,7 @@ const calculateMissedCallRisk = (data: AssessmentData): AssessmentResults => {
   const riskLevel = riskScore >= 60 ? 'HIGH' : riskScore >= 30 ? 'MEDIUM' : 'LOW';
 
   if (recommendations.length === 0) {
-    recommendations.push('You have decent coverage, but AI ensures 0% slip-through rate 24/7.');
+      recommendations.push('You have decent coverage, but AI helps every call get answered 24/7.');
   }
 
   return {
@@ -211,14 +211,14 @@ const AssessmentForm = ({ onComplete }: { onComplete: (data: AssessmentData) => 
                   className={`p-6 rounded-2xl border text-left transition-all ${formData.receptionConfig === 'Multitasking' ? 'bg-brand border-brand text-white' : 'bg-white/10 border-white/10 hover:bg-white/20 text-text-muted'}`}
                 >
                   <div className="text-xl font-bold mb-1">Multitasking</div>
-                  <div className="text-sm opacity-80">Handles check-ins, payments AND phones</div>
+                  <div className="text-sm opacity-80">Handles check ins, payments, and phones</div>
                 </button>
                 <button
                   onClick={() => updateField('receptionConfig', 'Dedicated')}
                   className={`p-6 rounded-2xl border text-left transition-all ${formData.receptionConfig === 'Dedicated' ? 'bg-brand border-brand text-white' : 'bg-white/10 border-white/10 hover:bg-white/20 text-text-muted'}`}
                 >
                   <div className="text-xl font-bold mb-1">Dedicated Phone Staff</div>
-                  <div className="text-sm opacity-80">Someone answers phones 100% of the time (no in-person tasks)</div>
+                  <div className="text-sm opacity-80">Someone answers phones 100% of the time without in office tasks</div>
                 </button>
               </div>
             </div>
@@ -377,11 +377,11 @@ const AssessmentResults = ({ data, results, onBookDemo }: {
         </div>
 
         {/* REVENUE HERO */}
-        <div className={`glass-panel rounded-3xl p-12 border ${getRiskBgColor(results.riskLevel)} text-center relative overflow-hidden`}>
+        <div className={`glass-panel rounded-3xl p-6 sm:p-12 border ${getRiskBgColor(results.riskLevel)} text-center relative overflow-hidden`}>
           <div className="absolute inset-0 bg-brand/5 animate-pulse duration-[3000ms]"></div>
           <div className="relative z-10 space-y-2">
-            <h3 className="text-lg text-text-muted font-bold uppercase tracking-widest">Potential Monthly Revenue Recovered</h3>
-            <div className="text-6xl md:text-8xl font-black text-white drop-shadow-[0_0_20px_rgba(255,106,0,0.5)]">
+            <h3 className="text-base sm:text-lg text-text-muted font-bold uppercase tracking-normal">Potential Monthly Revenue Recovered</h3>
+            <div className="text-5xl md:text-7xl font-black text-white drop-shadow-[0_0_20px_rgba(255,106,0,0.5)]">
               ${slidingRevenue.toLocaleString()}
             </div>
 
@@ -411,14 +411,14 @@ const AssessmentResults = ({ data, results, onBookDemo }: {
         {/* Key Metrics */}
         <div className="grid md:grid-cols-2 gap-6">
           <div className="glass-panel rounded-2xl p-8 border border-white/10">
-            <div className="text-text-muted text-sm font-black uppercase tracking-widest mb-4">Missed Calls</div>
-            <div className="text-5xl font-black text-white">{slidingMissedCalls}</div>
+            <div className="text-text-muted text-sm font-black uppercase tracking-normal mb-4">Missed Calls</div>
+            <div className="text-4xl sm:text-5xl font-black text-white">{slidingMissedCalls}</div>
             <div className="text-text-muted mt-2">calls/month slipping through</div>
           </div>
           <div className="glass-panel rounded-2xl p-8 border border-white/10">
-            <div className="text-text-muted text-sm font-black uppercase tracking-widest mb-4">Lost New Starts</div>
+            <div className="text-text-muted text-sm font-black uppercase tracking-normal mb-4">Lost New Starts</div>
             {/* Estimate lost starts based on revenue divided by case value */}
-            <div className="text-5xl font-black text-brand">{(slidingRevenue / data.avgCaseValue).toFixed(1)}</div>
+            <div className="text-4xl sm:text-5xl font-black text-brand">{(slidingRevenue / data.avgCaseValue).toFixed(1)}</div>
             <div className="text-text-muted mt-2">cases/month missed</div>
           </div>
         </div>
@@ -529,6 +529,37 @@ const App = () => {
     }
   };
 
+  const handleStartVoiceDemo = () => {
+    const findAndClickWidget = (attempts = 0) => {
+      const container = document.querySelector('#nedzo-widget-container');
+      let widgetBtn: HTMLElement | null = null;
+
+      if (container && container.shadowRoot) {
+        widgetBtn = container.shadowRoot.querySelector('button[aria-label="Talk to Chloe"]');
+      }
+
+      if (!widgetBtn) {
+        const selectors = ['iframe[src*="nedzo"]', 'div[id*="nedzo"] button'];
+        for (const selector of selectors) {
+          const found = document.querySelector(selector);
+          if (found instanceof HTMLElement) widgetBtn = found;
+          if (widgetBtn) break;
+        }
+      }
+
+      if (widgetBtn) {
+        widgetBtn.click();
+      } else if (attempts < 10) {
+        setTimeout(() => findAndClickWidget(attempts + 1), 500);
+      } else {
+        window.dispatchEvent(new CustomEvent('nedzo-open'));
+        alert("The AI agent is loading. Please try again in a moment.");
+      }
+    };
+
+    findAndClickWidget();
+  };
+
 
 
   useEffect(() => {
@@ -547,23 +578,23 @@ const App = () => {
     {
       id: 'inbound',
       step: '01',
-      title: 'Instant Answer',
-      description: 'Nova picks up immediately, 24/7. No voicemail, no hold times.',
-      outcome: 'No missed calls'
+      title: 'Always On Coverage',
+      description: 'Nova AI Voice answers missed calls, calls after business hours, and overflow calls before they go to voicemail.',
+      outcome: 'Fewer missed opportunities'
     },
     {
       id: 'qualification',
       step: '02',
-      title: 'Smart Triage',
-      description: 'AI filters emergencies and collects insurance details instantly.',
-      outcome: 'Qualified leads only'
+      title: 'Structured Intake',
+      description: 'Chloe collects the details your team needs so every caller arrives qualified and documented.',
+      outcome: 'Better handoff to the front desk'
     },
     {
       id: 'booking',
       step: '03',
-      title: 'Real-time Booking',
-      description: 'Direct sync with your calendar to fill open slots automatically.',
-      outcome: 'Full schedule'
+      title: 'Controlled Booking',
+      description: 'Appointments are only placed when hours, availability, and required patient info all line up.',
+      outcome: 'Cleaner schedules'
     }
   ];
 
@@ -613,34 +644,32 @@ const App = () => {
   }
 
   return (
-    <div className="overflow-x-hidden bg-[#07080B] text-white font-sans selection:bg-brand-500/30">
+    <div className="overflow-x-hidden bg-bg-main text-white font-sans selection:bg-brand/20">
       {/* (Rest of the original landing page content remains here, slightly adjusted for navigation) */}
       {/* 1) HEADER + STICKY NAV */}
-      <header className="fixed w-full top-0 z-50 bg-[#07080B]/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
+      <header className="fixed w-full top-0 z-50 bg-bg-main/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-[5.5rem] sm:h-24">
             {/* Logo */}
             <div
               className="flex items-center cursor-pointer group py-2"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
               <img
-                src="/logo_final.png?v=2"
-                alt="Nova AI Voice — AI Receptionist for Orthodontists"
-                width="56"
-                height="56"
-                className="h-14 w-auto object-contain transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_25px_rgba(255,106,0,0.5)]"
+                src="/lockup-dark.svg"
+                alt="Nova AI Voice"
+                className="h-12 sm:h-14 md:h-16 w-auto object-contain transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_25px_rgba(0,212,255,0.35)]"
               />
             </div>
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex space-x-8">
-              <a href="#live-demo" className="text-sm font-medium text-text-muted hover:text-white hover:text-glow transition-all">Live Demo</a>
-              <a href="#features" className="text-sm font-medium text-text-muted hover:text-white hover:text-glow transition-all">Features</a>
-              <a href="#pricing" className="text-sm font-medium text-text-muted hover:text-white hover:text-glow transition-all">Pricing</a>
+              <a href="#live-demo" className="text-sm font-medium uppercase tracking-normal text-text-muted hover:text-white hover:text-glow transition-all">Live Demo</a>
+              <a href="#features" className="text-sm font-medium uppercase tracking-normal text-text-muted hover:text-white hover:text-glow transition-all">Features</a>
+              <a href="#pricing" className="text-sm font-medium uppercase tracking-normal text-text-muted hover:text-white hover:text-glow transition-all">Pricing</a>
               <button
                 onClick={() => setView('assessment')}
-                className="text-sm font-medium text-text-muted hover:text-white hover:text-glow transition-all flex items-center gap-2"
+                className="text-sm font-medium uppercase tracking-normal text-text-muted hover:text-white hover:text-glow transition-all flex items-center gap-2"
               >
                 <span>ROI Calculator</span>
                 <span className="px-1.5 py-0.5 rounded bg-white/10 text-[10px] uppercase tracking-wider font-bold">New</span>
@@ -650,7 +679,7 @@ const App = () => {
             {/* CTA */}
             <div className="flex items-center gap-4">
               <a href="#demo" className="hidden md:inline-flex items-center justify-center px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-semibold rounded-full text-white backdrop-blur-md transition-all hover:scale-105 hover:border-brand/30">
-                Book a Demo
+                Request Intro Call
               </a>
               {/* Mobile Menu Button */}
               <button
@@ -682,7 +711,7 @@ const App = () => {
               >
                 ROI Calculator
               </button>
-              <a href="#demo" onClick={() => setMobileMenuOpen(false)} className="block w-full text-center mt-4 px-6 py-3 border border-transparent text-base font-bold rounded-lg text-white bg-brand hover:bg-brand-hover">Book a Demo</a>
+              <a href="#demo" onClick={() => setMobileMenuOpen(false)} className="block w-full text-center mt-4 px-6 py-3 border border-transparent text-base font-bold rounded-lg text-bg-main bg-brand hover:bg-brand-hover">Request Intro Call</a>
             </div>
           </div>
         )}
@@ -690,65 +719,69 @@ const App = () => {
 
       <main>
         {/* 2) HERO SECTION */}
-        <section className="relative min-h-screen flex flex-col justify-center items-center pt-24 pb-16 overflow-hidden">
+        <section className="relative min-h-[92svh] flex flex-col justify-center items-center pt-36 pb-20 overflow-hidden">
 
           {/* Background Grid Pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none"></div>
+          <div className="absolute inset-0 bg-grid-pattern bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_70%_55%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none opacity-70"></div>
 
           {/* THE SENTINEL: AI CORE ANIMATION */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand/5 rounded-full blur-[120px] animate-pulse-slow pointer-events-none"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand/10 rounded-full blur-[120px] animate-pulse-slow pointer-events-none"></div>
+          <div className="absolute bottom-0 right-0 w-[420px] h-[420px] bg-accent/10 rounded-full blur-[140px] pointer-events-none"></div>
 
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 flex flex-col items-center">
 
             {/* Pill */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand/5 border border-brand/20 text-brand-light text-xs font-bold uppercase tracking-widest mb-8 animate-[fadeIn_0.6s_ease-out] hover:bg-brand/10 transition-colors cursor-default backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-brand-light text-xs font-bold uppercase tracking-normal mb-8 animate-[fadeIn_0.6s_ease-out] hover:bg-white/10 transition-colors cursor-default backdrop-blur-md">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
               </span>
-              For Growth Focused Orthodontists
+              Built for Orthodontic & Dental Practices
             </div>
 
             {/* H1 */}
-            <h1 className="text-5xl md:text-8xl font-black text-white tracking-tight mb-8 leading-[1.0] drop-shadow-xl relative z-20">
-              Stop Losing Patients <br className="hidden md:block" />
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white tracking-normal mb-8 leading-tight drop-shadow-xl relative z-20">
+              Stop Losing Serious Patients <br className="hidden md:block" />
               to <span className="gradient-text relative inline-block">
                 Missed Calls
               </span>
             </h1>
 
             {/* Subheadline */}
-            <p className="mt-4 max-w-3xl mx-auto text-xl md:text-2xl text-text-muted leading-relaxed font-light">
-              Your front desk is overwhelmed. <strong className="text-white font-semibold">Nova answers instantly</strong>, qualifies patients, and books consultations <span className="text-brand font-bold">24/7</span>.
+            <p className="mt-4 max-w-3xl mx-auto text-xl md:text-2xl text-text-muted leading-relaxed font-medium">
+              Nova AI Voice helps orthodontic and dental practices answer every call, qualify the right patient, and book consultations <span className="text-brand font-bold">24/7</span> without replacing the front desk.
+            </p>
+            <p className="mt-5 max-w-2xl mx-auto text-sm md:text-base uppercase tracking-normal text-text-soft">
+              Chloe handles overflow, calls after business hours, and busy moments so your team stays focused in the office.
             </p>
 
             {/* CTA Buttons */}
-            <div className="mt-10 flex flex-col sm:flex-row gap-6 w-full max-w-md mx-auto sm:max-w-none justify-center">
+            <div className="mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 w-full max-w-lg mx-auto sm:max-w-none justify-center">
               <button
                 onClick={() => {
                   document.getElementById('live-demo')?.scrollIntoView({ behavior: 'smooth' });
                   setTimeout(() => document.getElementById('start-demo-btn')?.focus(), 800);
                 }}
-                className="group relative flex items-center justify-center gap-3 px-8 py-5 bg-brand hover:bg-brand-hover text-white text-lg font-bold rounded-2xl shadow-[0_0_40px_rgba(255,106,0,0.3)] hover:shadow-[0_0_60px_rgba(255,106,0,0.5)] transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
+                className="group relative w-full sm:w-auto flex items-center justify-center gap-3 px-6 sm:px-8 py-4 sm:py-5 bg-brand hover:bg-brand-hover text-bg-main text-base sm:text-lg font-bold rounded-2xl shadow-[0_0_40px_rgba(0,212,255,0.22)] hover:shadow-[0_0_60px_rgba(0,212,255,0.32)] transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:animate-shimmer"></div>
-                <span>Talk to Nova Now</span>
+                <span>Talk to Chloe</span>
                 <Phone className="w-5 h-5 group-hover:rotate-12 transition-transform" />
               </button>
 
               <button
                 onClick={() => setView('assessment')}
-                className="flex items-center justify-center gap-3 px-8 py-5 bg-white/5 hover:bg-white/10 text-white text-lg font-semibold rounded-2xl border border-white/10 hover:border-white/20 backdrop-blur-md transition-all">
-                <span>Take Assessment</span>
+                className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 sm:px-8 py-4 sm:py-5 bg-white/5 hover:bg-white/10 text-white text-base sm:text-lg font-semibold rounded-2xl border border-white/10 hover:border-white/20 backdrop-blur-md transition-all">
+                <span>Estimate Missed Revenue</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
 
             {/* Trust Badges */}
-            <div className="mt-16 pt-8 border-t border-white/5 flex flex-wrap justify-center gap-8 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-              <div className="flex items-center gap-2 text-sm font-bold tracking-widest"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.21a12.002 12.002 0 00-16.45 0A12.002 12.002 0 003 12c0 2.757 1.12 5.257 2.988 7.071L12 22l6.012-2.929A12.002 12.002 0 0021 12c0-2.757-1.12-5.257-2.988-7.071z"></path></svg> HIPAA COMPLIANT</div>
-              <div className="flex items-center gap-2 text-sm font-bold tracking-widest"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> PRACTICE MANAGEMENT SYNC</div>
-              <div className="flex items-center gap-2 text-sm font-bold tracking-widest"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> INVISALIGN READY</div>
+            <div className="mt-14 sm:mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-4 sm:gap-8 opacity-70 transition-all duration-500">
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold tracking-normal text-text-muted"><svg className="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.21a12.002 12.002 0 00-16.45 0A12.002 12.002 0 003 12c0 2.757 1.12 5.257 2.988 7.071L12 22l6.012-2.929A12.002 12.002 0 0021 12c0-2.757-1.12-5.257-2.988-7.071z"></path></svg> BUILT FOR TRUST</div>
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold tracking-normal text-text-muted"><svg className="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> CONTROLLED SCHEDULING</div>
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold tracking-normal text-text-muted"><svg className="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> SUPPORTS YOUR TEAM</div>
             </div>
 
           </div>
@@ -756,147 +789,189 @@ const App = () => {
 
         {/* 3) LIVE DEMO SECTION */}
         <section id="live-demo" className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-bg-main via-[#091425] to-bg-card"></div>
 
           <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
-            <div className="inline-block px-4 py-1 rounded-full border border-brand/20 bg-brand/5 backdrop-blur-sm mb-6">
-              <span className="text-brand font-bold tracking-widest uppercase text-xs animate-pulse">Interactive Demo</span>
+            <div className="inline-block px-4 py-1 rounded-full border border-brand/20 bg-white/5 backdrop-blur-sm mb-6">
+              <span className="text-brand font-bold tracking-normal uppercase text-xs animate-pulse">Interactive Demo</span>
             </div>
 
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">Experience Nova Live</h2>
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-normal text-white mb-6">Experience Chloe Live</h2>
 
             <p className="text-text-muted text-lg max-w-2xl mx-auto mb-12">
-              Chloe is a virtual dental receptionist built with Nova AI Voice. Try a real conversation and see how inbound clinic calls are handled.
+              Chloe is the Nova AI Voice receptionist for orthodontic and dental practices. Test how missed call capture, qualification, and booking feel in a live conversation.
             </p>
 
-            {/* Clarification Text */}
-            <p className="text-sm text-text-muted/60 mb-8 font-medium">
-              This is a live voice demo. Appointment booking is disabled in this experience. Use it to test call quality, speed, and how Nova handles real patient conversations.
-            </p>
+            <div className="relative mx-auto max-w-4xl">
+              <div className="absolute -inset-1 rounded-[2.5rem] bg-gradient-to-r from-brand/50 via-brand-light/40 to-accent/45 blur opacity-20"></div>
 
+              <div id="demo-widget-mount" className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_26%_18%,rgba(0,212,255,0.16),transparent_28%),linear-gradient(145deg,rgba(14,30,54,0.95),rgba(8,17,31,0.98))] p-5 shadow-2xl sm:p-8">
+                <div className="absolute inset-0 bg-grid-pattern bg-[size:32px_32px] opacity-20 pointer-events-none"></div>
 
-            {/* WIDGET CONTAINER - Refactored for Stacking Context Safety */}
-            <div className="relative mx-auto max-w-3xl h-80">
+                <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[0.92fr_1.08fr]">
+                  <div className="flex justify-center lg:justify-end">
+                    <div className="demo-phone-tilt relative w-[13.5rem] sm:w-[15rem]">
+                      <div className="absolute -inset-5 rounded-full bg-brand/20 blur-[55px]"></div>
+                      <div className="relative rounded-[2.2rem] border border-white/15 bg-gradient-to-br from-white/[0.16] to-white/[0.04] p-1.5 shadow-[0_28px_80px_rgba(0,0,0,0.36)]">
+                        <div className="overflow-hidden rounded-[1.85rem] border border-white/10 bg-[#071425] p-3">
+                          <div className="mx-auto mb-3 h-4 w-20 rounded-b-2xl bg-black/70"></div>
+                          <div className="relative min-h-[20rem] overflow-hidden rounded-[1.5rem] bg-[radial-gradient(circle_at_50%_0%,rgba(0,212,255,0.20),transparent_36%),linear-gradient(180deg,#0D2440,#07101F)] p-4 text-left">
+                            <div className="mb-5 flex items-center justify-between">
+                              <div>
+                                <div className="text-[9px] font-bold uppercase tracking-normal text-brand-light">Nova AI Voice</div>
+                                <div className="text-lg font-black text-white">Chloe</div>
+                              </div>
+                              <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-brand text-bg-main">
+                                <span className="demo-ring absolute inset-0 rounded-full border border-brand"></span>
+                                <Phone className="relative h-5 w-5" />
+                              </div>
+                            </div>
 
-              {/* 1. Visual Layer (Background, Blur, Borders) - ABSOLUTE so it doesn't affect widget interactivity */}
-              <div className="absolute inset-0 bg-[#0B0F19]/80 backdrop-blur-2xl rounded-[2rem] border border-white/10 shadow-2xl z-0 pointer-events-none"></div>
+                            <div className="rounded-2xl border border-white/10 bg-white/[0.08] p-3">
+                              <div className="mb-2 flex items-center justify-between">
+                                <span className="text-[10px] font-bold uppercase tracking-normal text-brand-light">Live call</span>
+                                <span className="text-xs font-bold text-text-soft">00:18</span>
+                              </div>
+                              <div className="text-sm font-black text-white">New patient inquiry</div>
+                              <div className="mt-1 text-xs text-text-muted">Morning consult preferred</div>
+                            </div>
 
-              {/* 2. Glow Effects */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-brand via-purple-500 to-brand rounded-[2.5rem] blur opacity-20 animate-bg-pan z-[-1]"></div>
+                            <div className="mt-4 flex h-12 items-center justify-between rounded-2xl bg-bg-main/60 px-4 text-brand">
+                              <span className="voice-bar h-4 w-1.5 rounded-full bg-current"></span>
+                              <span className="voice-bar h-8 w-1.5 rounded-full bg-current"></span>
+                              <span className="voice-bar h-5 w-1.5 rounded-full bg-current"></span>
+                              <span className="voice-bar h-10 w-1.5 rounded-full bg-current"></span>
+                              <span className="voice-bar h-6 w-1.5 rounded-full bg-current"></span>
+                              <span className="voice-bar h-9 w-1.5 rounded-full bg-current"></span>
+                            </div>
 
-              {/* 3. Logic Layer (The Widget Mount) - NO FILTERS, NO TRANSFORMS */}
-              <div id="demo-widget-mount" className="relative z-10 w-full h-full flex flex-col items-center justify-center p-4">
+                            <div className="mt-4 rounded-2xl border border-brand/20 bg-brand/10 p-3">
+                              <div className="flex items-center gap-3">
+                                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-bg-main">
+                                  <Calendar className="h-4 w-4" />
+                                </div>
+                                <div>
+                                  <div className="text-[10px] font-bold uppercase tracking-normal text-brand-light">Consult booked</div>
+                                  <div className="text-sm font-black text-white">Tuesday, 10:30 AM</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-                {/* Interactive Trigger Button (Placeholder) */}
-                {/* Interactive Trigger Button */}
-                <button
-                  id="start-demo-btn"
-                  onClick={() => {
-                    const findAndClickWidget = (attempts = 0) => {
-                      // 1. Try accessing via Shadow DOM (Correct Path found in testing)
-                      const container = document.querySelector('#nedzo-widget-container');
-                      let widgetBtn: HTMLElement | null = null;
+                  <div className="space-y-4 text-left">
+                    <div className="demo-flow-card rounded-2xl border border-white/10 bg-bg-main/70 p-4 backdrop-blur-xl">
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand/15 text-brand">
+                          <Phone className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-bold uppercase tracking-normal text-text-soft">1. Patient calls</div>
+                          <div className="text-base font-black text-white">A new inquiry comes in</div>
+                        </div>
+                      </div>
+                    </div>
 
-                      if (container && container.shadowRoot) {
-                        widgetBtn = container.shadowRoot.querySelector('button[aria-label="Talk to Chloe"]');
-                      }
+                    <div className="demo-flow-card answer rounded-2xl border border-white/10 bg-bg-main/70 p-4 backdrop-blur-xl">
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand/15 text-brand">
+                          <MessageSquare className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-bold uppercase tracking-normal text-text-soft">2. Chloe answers</div>
+                          <div className="text-base font-black text-white">She qualifies the patient calmly</div>
+                        </div>
+                      </div>
+                    </div>
 
-                      // 2. Fallback: Try standard selectors if Shadow DOM method fails
-                      if (!widgetBtn) {
-                        const selectors = ['iframe[src*="nedzo"]', 'div[id*="nedzo"] button'];
-                        for (const s of selectors) {
-                          const found = document.querySelector(s);
-                          if (found instanceof HTMLElement) widgetBtn = found;
-                          if (widgetBtn) break;
-                        }
-                      }
+                    <div className="demo-flow-card book rounded-2xl border border-white/10 bg-bg-main/70 p-4 backdrop-blur-xl">
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent/15 text-accent">
+                          <Calendar className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-bold uppercase tracking-normal text-text-soft">3. Appointment booked</div>
+                          <div className="text-base font-black text-white">Your team gets the handoff</div>
+                        </div>
+                      </div>
+                    </div>
 
-                      if (widgetBtn) {
-                        widgetBtn.click();
-                        console.log("Nedzo widget clicked successfully");
-                      } else if (attempts < 10) {
-                        // Retry every 500ms if not found (widget might be loading)
-                        console.log(`Widget not found, retrying... (${attempts + 1}/10)`);
-                        setTimeout(() => findAndClickWidget(attempts + 1), 500);
-                      } else {
-                        console.warn("Nedzo widget not found after retries. Opening fallback.");
-                        // Final Fallback: Dispatch event
-                        window.dispatchEvent(new CustomEvent('nedzo-open'));
-                        alert("The AI agent is loading. Please try again in a moment.");
-                      }
-                    };
-
-                    findAndClickWidget();
-                  }}
-                  className="group relative flex items-center justify-center gap-3 px-10 py-6 bg-brand hover:bg-brand-hover text-white text-xl font-black rounded-full shadow-[0_0_50px_rgba(255,106,0,0.4)] hover:shadow-[0_0_70px_rgba(255,106,0,0.6)] transition-all duration-300 transform hover:-translate-y-1 overflow-hidden focus:outline-none focus:ring-4 focus:ring-brand/50"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:animate-shimmer"></div>
-                  <Phone className="w-6 h-6 animate-pulse" />
-                  <span>Start Demo Call</span>
-                </button>
-
+                    <button
+                      id="start-demo-btn"
+                      onClick={handleStartVoiceDemo}
+                      className="group relative mt-6 flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-brand px-5 py-4 text-base font-black text-bg-main shadow-[0_0_45px_rgba(0,212,255,0.25)] transition-all duration-300 hover:-translate-y-1 hover:bg-brand-hover hover:shadow-[0_0_60px_rgba(0,212,255,0.34)] focus:outline-none focus:ring-4 focus:ring-brand/50 sm:text-lg"
+                    >
+                      <div className="absolute inset-0 translate-x-[-100%] bg-gradient-to-r from-transparent via-white/25 to-transparent group-hover:animate-shimmer"></div>
+                      <Phone className="h-5 w-5 transition-transform group-hover:rotate-12" />
+                      <span>Start Demo With Chloe</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* FEATURES GRID */}
-        <section id="features" className="py-24 relative bg-bg-card/50">
+        <section id="features" className="py-24 relative bg-[linear-gradient(180deg,rgba(14,30,54,0.72),rgba(10,22,40,0.98))]">
           <div className="container mx-auto px-6">
             <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-4">Built for Growth Focused Orthodontists</h2>
+              <h2 className="text-3xl lg:text-4xl font-bold tracking-normal mb-4">Built to support a strong front desk</h2>
               <p className="text-text-muted max-w-2xl mx-auto">
-                Don't let your "Treatment Coordinator" waste time on tire kickers. Let AI handle the intake.
+                Keep your current team focused on patients in the office while Nova AI Voice handles overflow, calls after business hours, and consistent intake.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
+            <div className="grid md:grid-cols-3 gap-4 sm:gap-8">
+              <div className="p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
                 <div className="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand/20 transition-colors">
                   <svg className="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Zero Missed Calls</h3>
-                <p className="text-text-muted">Nova picks up instantly on the first ring, ensuring you never lose a potential new patient to a competitor's voicemail.</p>
+                <h3 className="text-xl font-bold mb-2">No missed first impressions</h3>
+                <p className="text-text-muted">Nova AI Voice answers fast when your team is busy, at lunch, or already on the phone, so serious patients do not fall to voicemail.</p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
+              <div className="p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
                 <div className="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand/20 transition-colors">
                   <svg className="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Smart Scheduling</h3>
-                <p className="text-text-muted">Directly books New Patient Exams into your calendar, prioritizing high value Invisalign and Braces consultations.</p>
+                <h3 className="text-xl font-bold mb-2">Scheduling with guardrails</h3>
+                <p className="text-text-muted">Consultations are booked only when the right information is captured and the appointment fits your clinic's rules and availability.</p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
+              <div className="p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
                 <div className="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand/20 transition-colors">
                   <svg className="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Patient Commitment</h3>
-                <p className="text-text-muted">Automates the entire intake process by answering questions and verifying insurance on the spot. Patients arrive at your clinic ready to start treatment.</p>
+                <h3 className="text-xl font-bold mb-2">Consistent qualification</h3>
+                <p className="text-text-muted">Every caller is guided through a structured intake so your team receives cleaner handoffs and more qualified consultations.</p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
+              <div className="p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
                 <div className="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand/20 transition-colors">
                   <svg className="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <h3 className="text-xl font-bold mb-2">24/7 Coverage</h3>
-                <p className="text-text-muted">Capture leads from your late night Instagram ads. Nova works nights, weekends, and holidays without overtime pay.</p>
+                <h3 className="text-xl font-bold mb-2">24/7 coverage</h3>
+                <p className="text-text-muted">Calls after business hours, weekend demand, and calls from ads still get answered with a calm, polished experience for patients.</p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
+              <div className="p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
                 <div className="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand/20 transition-colors">
                   <svg className="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Reactivation Campaigns</h3>
-                <p className="text-text-muted">Automatically calls old leads to re-engage them. "Are you still interested in fixing your smile?"</p>
+                <h3 className="text-xl font-bold mb-2">Overflow without burnout</h3>
+                <p className="text-text-muted">Nova gives your staff breathing room during peak periods while keeping service quality steady for every inbound call.</p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
+              <div className="p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-brand/30 transition-all hover:-translate-y-1 group">
                 <div className="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand/20 transition-colors">
                   <svg className="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Multilingual Support</h3>
-                <p className="text-text-muted">Serves your entire community by switching seamlessly between English, Spanish, and other key languages.</p>
+                <h3 className="text-xl font-bold mb-2">Clear patient experience</h3>
+                <p className="text-text-muted">Patients get a fast, professional interaction that sounds modern and helpful, not like a generic call center or rigid automation.</p>
               </div>
             </div>
           </div>
@@ -908,38 +983,38 @@ const App = () => {
         {/* BRIDGE: 48-HOUR DEMO CHALLENGE */}
         < section className="py-24 relative overflow-hidden" >
           {/* Background Gradient to smooth transition from Hero Black to Pricing Black */}
-          < div className="absolute inset-0 bg-gradient-to-b from-[#07080B] via-[#0A0B10] to-[#07080B] pointer-events-none" ></div >
+          < div className="absolute inset-0 bg-gradient-to-b from-bg-main via-[#0B1930] to-bg-main pointer-events-none" ></div >
 
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="bg-gradient-to-br from-white/5 to-white/0 border border-brand/20 p-8 md:p-14 rounded-3xl relative overflow-hidden text-center group hover:border-brand/40 transition-all duration-500 shadow-2xl">
+            <div className="bg-gradient-to-br from-white/5 to-white/0 border border-brand/20 p-6 sm:p-8 md:p-14 rounded-3xl relative overflow-hidden text-center group hover:border-brand/40 transition-all duration-500 shadow-2xl">
 
               {/* Glow Effect */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-1 bg-gradient-to-r from-transparent via-brand to-transparent opacity-50 blur-sm"></div>
-              <div className="absolute -inset-1 bg-gradient-to-r from-brand/20 to-purple-600/20 blur-3xl opacity-10 group-hover:opacity-30 transition-opacity duration-500"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-brand/20 to-accent/20 blur-3xl opacity-10 group-hover:opacity-30 transition-opacity duration-500"></div>
 
-              <span className="inline-block py-1 px-4 rounded-full bg-brand/10 border border-brand/20 text-brand text-xs font-bold uppercase tracking-wide">
-                High Demand • Limited Availability
+              <span className="inline-block py-1 px-4 rounded-full bg-brand/10 border border-brand/20 text-brand text-xs font-bold uppercase tracking-normal">
+                Custom Demo Build
               </span>
 
-              <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
-                We'll Build Your Custom Demo in <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-brand-light">48 Hours</span>
+              <h2 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-6 tracking-normal leading-tight">
+                We will build your Nova AI Voice <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-accent">demo in 48 hours</span>
               </h2>
 
               <p className="text-xl text-text-muted max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
-                Don't just take our word for it. We will configure a <strong>fully functional AI receptionist</strong> trained on your specific clinic data. Completely free. No risk.
+                Instead of asking you to imagine the workflow, we configure a tailored demo around your clinic's hours, intake flow, and booking rules so you can hear the difference before committing.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
                 <a
                   href="#demo"
-                  className="px-10 py-5 bg-brand hover:bg-brand-hover text-white text-xl font-black rounded-2xl shadow-[0_0_40px_rgba(255,106,0,0.3)] hover:shadow-[0_0_60px_rgba(255,106,0,0.5)] transition-all hover:-translate-y-1 transform flex items-center gap-3 group"
+                  className="w-full sm:w-auto justify-center px-6 sm:px-10 py-4 sm:py-5 bg-brand hover:bg-brand-hover text-bg-main text-base sm:text-xl font-black rounded-2xl shadow-[0_0_40px_rgba(0,212,255,0.22)] hover:shadow-[0_0_60px_rgba(0,212,255,0.32)] transition-all hover:-translate-y-1 transform flex items-center gap-3 group"
                 >
                   <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                  Claim Free 48h Demo
+                  Request Your 48h Demo
                 </a>
                 <div className="flex items-center gap-2 text-sm text-text-muted opacity-80">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                  <span>Only 2 spots left this week</span>
+                  <div className="w-2 h-2 rounded-full bg-accent animate-pulse"></div>
+                  <span>Setup begins only when you are ready to go live</span>
                 </div>
               </div>
 
@@ -951,12 +1026,12 @@ const App = () => {
         < section id="pricing" className="py-24 bg-bg-main relative" >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Simple, Transparent Pricing</h2>
-              <p className="text-text-muted mb-8">No hidden fees. Just booked patients.</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-normal">Simple pricing for booked consultations</h2>
+              <p className="text-text-muted mb-8">Clear setup, clear monthly pricing, and a live trial before rollout.</p>
 
               {/* Setup Banner */}
               <div className="inline-block bg-brand/10 border border-brand/30 rounded-lg px-6 py-2 mb-8">
-                <span className="text-brand font-semibold text-sm md:text-base">$297 One-Time Setup • 14-Day Live Trial Included</span>
+                <span className="text-brand font-semibold text-sm md:text-base">$300 Setup Fee • 14 Day Free Trial Included</span>
               </div>
 
               {/* Toggle */}
@@ -985,14 +1060,14 @@ const App = () => {
               <div className="bg-bg-card border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all flex flex-col h-full">
                 <div className="mb-6">
                   <h3 className="text-xl font-bold text-white">Starter</h3>
-                  <p className="text-sm text-text-muted mt-2 h-10">Perfect for smaller clinics just starting with automation.</p>
+                  <p className="text-sm text-text-muted mt-2 min-h-10">Perfect for smaller clinics just starting with automation.</p>
                 </div>
                 <div className="mb-6">
                   <span className="text-4xl font-bold text-white">${isYearly ? 237 : 297}</span>
                   <span className="text-text-muted">/mo</span>
                   <div className="text-xs text-text-muted mt-1">{isYearly ? 'Billed Yearly' : 'Billed Monthly'}</div>
                 </div>
-                <a href="#demo" className="block w-full text-center py-3 border border-white/20 rounded-lg text-white font-semibold hover:bg-white/5 transition-colors">Select Plan</a>
+                <a href="#demo" className="block w-full text-center py-3 border border-white/20 rounded-lg text-white font-semibold hover:bg-white/5 transition-colors">Talk Through Starter</a>
                 <ul className="mt-8 space-y-4 text-sm text-text-muted flex-grow">
                   <li className="flex gap-3"><svg className="w-5 h-5 text-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> 1 AI Voice Agent</li>
                   <li className="flex gap-3"><svg className="w-5 h-5 text-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> 250 Minutes / Month</li>
@@ -1006,18 +1081,18 @@ const App = () => {
               </div>
 
               {/* Growth */}
-              <div className="bg-bg-card border border-brand/50 rounded-2xl p-8 relative shadow-[0_0_40px_rgba(255,106,0,0.15)] transform md:-translate-y-4 flex flex-col h-full">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Most Popular</div>
+              <div className="bg-bg-card border border-brand/50 rounded-2xl p-8 relative shadow-[0_0_40px_rgba(0,212,255,0.15)] transform md:-translate-y-4 flex flex-col h-full">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand text-bg-main text-xs font-bold px-3 py-1 rounded-full uppercase tracking-normal">Most Popular</div>
                 <div className="mb-6">
                   <h3 className="text-xl font-bold text-white">Growth</h3>
-                  <p className="text-sm text-text-muted mt-2 h-10">Our standard plan for growing practices with EMR needs.</p>
+                  <p className="text-sm text-text-muted mt-2 min-h-10">Our standard plan for growing practices with EMR needs.</p>
                 </div>
                 <div className="mb-6">
                   <span className="text-4xl font-bold text-white">${isYearly ? 397 : 497}</span>
                   <span className="text-text-muted">/mo</span>
                   <div className="text-xs text-text-muted mt-1">{isYearly ? 'Billed Yearly' : 'Billed Monthly'}</div>
                 </div>
-                <a href="#demo" className="block w-full text-center py-3 bg-brand rounded-lg text-white font-bold hover:bg-brand-hover transition-colors shadow-lg">Start 14-Day Trial</a>
+                <a href="#demo" className="block w-full text-center py-3 bg-brand rounded-lg text-bg-main font-bold hover:bg-brand-hover transition-colors shadow-lg">Start 14 Day Trial</a>
                 <ul className="mt-8 space-y-4 text-sm text-text-muted flex-grow">
                   <li className="flex gap-3"><svg className="w-5 h-5 text-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> 1 AI Voice Agent</li>
                   <li className="flex gap-3"><svg className="w-5 h-5 text-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> 400 Minutes / Month</li>
@@ -1027,7 +1102,7 @@ const App = () => {
                   <li className="flex gap-3"><svg className="w-5 h-5 text-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> Smart Scheduling Logic</li>
                 </ul>
                 <div className="mt-6 pt-6 border-t border-white/5 text-xs text-text-muted text-center">
-                  Add-ons available for extra minutes
+                  Extra minutes are available
                 </div>
               </div>
 
@@ -1035,14 +1110,14 @@ const App = () => {
               <div className="bg-bg-card border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all flex flex-col h-full">
                 <div className="mb-6">
                   <h3 className="text-xl font-bold text-white">Pro</h3>
-                  <p className="text-sm text-text-muted mt-2 h-10">Maximum power for high-volume clinics.</p>
+                  <p className="text-sm text-text-muted mt-2 min-h-10">Maximum coverage for clinics with higher call volume.</p>
                 </div>
                 <div className="mb-6">
                   <span className="text-4xl font-bold text-white">${isYearly ? 557 : 697}</span>
                   <span className="text-text-muted">/mo</span>
                   <div className="text-xs text-text-muted mt-1">{isYearly ? 'Billed Yearly' : 'Billed Monthly'}</div>
                 </div>
-                <a href="#demo" className="block w-full text-center py-3 border border-white/20 rounded-lg text-white font-semibold hover:bg-white/5 transition-colors">Select Plan</a>
+                <a href="#demo" className="block w-full text-center py-3 border border-white/20 rounded-lg text-white font-semibold hover:bg-white/5 transition-colors">Talk Through Pro</a>
                 <ul className="mt-8 space-y-4 text-sm text-text-muted flex-grow">
                   <li className="flex gap-3"><svg className="w-5 h-5 text-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> Up to 2 AI Voice Agents</li>
                   <li className="flex gap-3"><svg className="w-5 h-5 text-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> 600 Minutes / Month</li>
@@ -1061,45 +1136,37 @@ const App = () => {
         </section >
 
         {/* 8) FAQ SECTION */}
-        <section id="faq" className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand/3 to-transparent pointer-events-none"></div>
+        <section id="faq" className="py-24 relative overflow-hidden bg-[linear-gradient(180deg,rgba(10,22,40,0.98),rgba(14,30,54,0.72))]">
+          <div className="absolute inset-0 bg-grid-pattern bg-[size:32px_32px] opacity-20 pointer-events-none"></div>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center mb-16">
-              <div className="inline-block px-4 py-1 rounded-full border border-brand/20 bg-brand/5 backdrop-blur-sm mb-6">
-                <span className="text-brand font-bold tracking-widest uppercase text-xs">FAQ</span>
+              <div className="inline-block px-4 py-1 rounded-full border border-brand/20 bg-brand/10 backdrop-blur-sm mb-6">
+                <span className="text-brand font-bold tracking-normal uppercase text-xs">FAQ</span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Frequently Asked Questions</h2>
-              <p className="text-text-muted text-lg">Everything you need to know about Nova AI Voice before getting started.</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 tracking-normal">Frequently Asked Questions</h2>
+              <p className="text-text-muted text-lg">Everything you need to know before trying Nova AI Voice with your practice.</p>
             </div>
             <div className="space-y-4">
               {[
                 {
                   q: "What exactly is Nova AI Voice?",
-                  a: "Nova AI Voice is an AI-powered phone receptionist built specifically for orthodontic and dental practices. It answers every inbound call instantly, 24 hours a day, 7 days a week — including nights, weekends, and holidays. Nova greets callers professionally, collects patient information, verifies insurance details, answers common questions about Invisalign and braces, and books New Patient Exam appointments directly into your calendar without any staff involvement."
+                  a: "Nova AI Voice is an AI receptionist built for orthodontic and dental practices. It answers calls, qualifies patients, captures key details, and books consultations while your front desk stays focused on the people already in the office."
                 },
                 {
-                  q: "Is Nova AI Voice HIPAA compliant?",
-                  a: "Yes. Nova AI Voice is built to meet HIPAA compliance requirements. All patient data is handled with secure, encrypted protocols. We implement strict data handling policies to ensure that protected health information (PHI) is never stored or transmitted in an unauthorized manner. You can confidently use Nova in a clinical environment without compromising your compliance obligations."
+                  q: "Does Nova AI Voice replace my front desk team?",
+                  a: "No. Nova AI Voice supports your team during overflow, calls after business hours, lunch breaks, and busy moments. Your staff stays in control while Chloe handles the repetitive intake work."
                 },
                 {
-                  q: "Which practice management systems does Nova integrate with?",
-                  a: "Nova integrates natively with Google Calendar, Microsoft Outlook, Apple iCloud, Jane App, and Cliniko for real-time appointment booking. Our team can also configure custom integrations during your onboarding. The 48-hour custom demo we build for you is specifically configured to sync with your existing calendar system at no cost."
+                  q: "Can Chloe book appointments?",
+                  a: "Yes. Chloe can collect the right patient information and book consultations using the calendar rules you approve during setup."
                 },
                 {
-                  q: "How long does it take to set up Nova for my practice?",
-                  a: "Setup takes less than 48 hours. After you book a strategy call, our team builds a fully functional AI receptionist trained on your clinic's specific information — your hours, insurance policies, services, and frequently asked questions. You review it, approve it, and go live. There is no technical work required on your end. Most practices are fully operational within two business days."
+                  q: "Which calendar systems can it work with?",
+                  a: "Nova AI Voice can be configured around Google Calendar, Outlook, iCloud, Jane, Cliniko, or another scheduling process your clinic already uses."
                 },
                 {
-                  q: "What languages does Nova speak?",
-                  a: "Nova supports multilingual conversations and can switch seamlessly between English, Spanish, and other key languages mid-call. This allows you to serve your entire community — including Spanish-speaking families — without needing bilingual staff on call 24/7. Language detection is automatic based on how the caller speaks."
-                },
-                {
-                  q: "What happens if Nova can't answer a question?",
-                  a: "Nova is trained to handle the vast majority of common patient inquiries — scheduling, insurance questions, directions, pricing, and treatment options. In the rare case where a caller has a complex clinical question, Nova collects their details and notifies your team with a full transcript so you can follow up promptly. Nova never leaves a caller hanging."
-                },
-                {
-                  q: "Can I try Nova before committing to a plan?",
-                  a: "Absolutely. We offer a completely free 48-hour custom demo built specifically for your clinic — no credit card required. You can speak with the AI, test its responses, and see exactly how it handles your real patient scenarios before making any decision. Growth and Pro plans also include a full 14-day live trial after setup."
+                  q: "Can I try it before committing?",
+                  a: "Yes. We can build a tailored demo around your hours, intake flow, and booking rules so you can hear how Chloe handles real patient scenarios before rollout."
                 }
               ].map((item, i) => (
                 <details key={i} className="glass-card rounded-2xl group">
@@ -1115,7 +1182,7 @@ const App = () => {
         </section>
 
         {/* 9) FOOTER WITH FORM */}
-        < footer className="bg-[#050608] pt-20 pb-12 border-t border-white/5 relative overflow-hidden" id="demo" >
+        < footer className="bg-[#08111f] pt-20 pb-12 border-t border-white/5 relative overflow-hidden" id="demo" >
           {/* Ambient Background Glow for Footer */}
           < div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-brand/5 rounded-full blur-[120px] pointer-events-none" ></div >
 
@@ -1125,22 +1192,21 @@ const App = () => {
               {/* Left Column: Value Prop & Trust */}
               <div className="space-y-8">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 border border-brand/20 text-brand text-xs font-bold uppercase tracking-wider mb-6">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 border border-brand/20 text-brand text-xs font-bold uppercase tracking-normal mb-6">
                     <span className="w-2 h-2 rounded-full bg-brand animate-pulse"></span>
-                    Priority Access
+                    Intro Call Request
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-                    Claim Your Practice's <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-brand-light">24/7 AI Receptionist</span>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-6 leading-tight tracking-normal">
+                    See how Nova AI Voice can <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-accent">support your front desk</span>
                   </h2>
                   <p className="text-xl text-text-muted leading-relaxed">
-                    Join the top dental practices automating their front desk.
-                    Qualify every lead, fill your calendar, and set it up in less than 24 hours.
+                    We will review your call flow, show where leads are leaking, and map a live demo that fits your current scheduling process.
                   </p>
                 </div>
 
                 {/* Trust Elements */}
                 <div className="pt-8 border-t border-white/5">
-                  <p className="text-sm text-text-muted font-medium mb-4 uppercase tracking-widest">Compatible With</p>
+                  <p className="text-sm text-text-muted font-medium mb-4 uppercase tracking-normal">Compatible With</p>
                   <div className="flex flex-wrap gap-4 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
                     {/* Text-based mock logos for now, or ensure image assets exist. Using sleek text badges for safety if images missing */}
                     <span className="px-4 py-2 border border-white/10 rounded-lg text-white/60 font-semibold">Google Calendar</span>
@@ -1152,7 +1218,7 @@ const App = () => {
 
                 <div className="flex items-center gap-2 text-xs text-white/30">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                  <span>Secure & Private Data Handling</span>
+                  <span>Secure and private patient handling</span>
                 </div>
               </div>
 
@@ -1160,7 +1226,7 @@ const App = () => {
               <div className="bg-bg-card border border-white/10 p-1 rounded-3xl shadow-2xl relative">
                 <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent rounded-3xl pointer-events-none"></div>
 
-                <div className="bg-[#0A0B10] rounded-[22px] p-8 md:p-10 relative overflow-hidden">
+                <div className="bg-[#0A0B10] rounded-[22px] p-6 sm:p-8 md:p-10 relative overflow-hidden">
                   {/* Glow Effect */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-brand to-transparent opacity-50"></div>
 
@@ -1169,8 +1235,8 @@ const App = () => {
                       <div className="w-20 h-20 bg-green-500/10 border border-green-500/20 text-green-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
                         <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                       </div>
-                      <h3 className="text-3xl font-bold text-white mb-3">Spot Reserved!</h3>
-                      <p className="text-text-muted mb-6">Our integration team will contact you shortly to confirm your strategy call.</p>
+                      <h3 className="text-3xl font-bold text-white mb-3">Request Received</h3>
+                      <p className="text-text-muted mb-6">Our team will contact you shortly to confirm your intro call and demo setup details.</p>
                       <div className="w-full bg-white/5 rounded-lg p-4 border border-white/10">
                         <div className="flex justify-between text-xs text-text-muted mb-2">
                           <span>Status</span>
@@ -1184,24 +1250,24 @@ const App = () => {
                   ) : (
                     <>
                       <div className="mb-8">
-                        <h3 className="text-2xl font-bold text-white mb-2">Schedule Strategy Call</h3>
-                        <p className="text-sm text-text-muted">Fill out the intake form below. We only accept 5 new clinics per week.</p>
+                        <h3 className="text-2xl font-bold text-white mb-2">Request Your Intro Call</h3>
+                        <p className="text-sm text-text-muted">Tell us about your clinic. We will use this to tailor the Nova AI Voice demo around your current workflow.</p>
                       </div>
 
                       <form onSubmit={handleBookDemo} className="space-y-5 relative z-10">
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <label htmlFor="name" className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Practice Owner</label>
+                            <label htmlFor="name" className="block text-xs font-semibold text-text-muted uppercase tracking-normal mb-2">Practice Owner</label>
                             <input type="text" id="name" required className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all placeholder:text-white/20" placeholder="Dr. Name" />
                           </div>
                           <div>
-                            <label htmlFor="email" className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Work Email</label>
+                            <label htmlFor="email" className="block text-xs font-semibold text-text-muted uppercase tracking-normal mb-2">Work Email</label>
                             <input type="email" id="email" required className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all placeholder:text-white/20" placeholder="name@clinic.com" />
                           </div>
                         </div>
 
                         <div>
-                          <label htmlFor="calendar" className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Current Calendar System</label>
+                          <label htmlFor="calendar" className="block text-xs font-semibold text-text-muted uppercase tracking-normal mb-2">Current Calendar System</label>
                           <select id="calendar" defaultValue="" className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all appearance-none cursor-pointer">
                             <option value="" disabled className="bg-[#0A0B10] text-gray-500">Select System...</option>
                             <option value="Google Calendar" className="bg-[#0A0B10] text-white">Google Calendar</option>
@@ -1213,26 +1279,26 @@ const App = () => {
                         </div>
 
                         <div>
-                          <label htmlFor="volume" className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Monthly Patient Volume</label>
+                          <label htmlFor="volume" className="block text-xs font-semibold text-text-muted uppercase tracking-normal mb-2">Monthly Patient Volume</label>
                           <select id="volume" defaultValue="" className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all appearance-none cursor-pointer">
                             <option value="" disabled className="bg-[#0A0B10] text-gray-500">Select Volume...</option>
                             <option value="Startup (0-200)" className="bg-[#0A0B10] text-white">Startup (0-200)</option>
                             <option value="Growing (200-1000)" className="bg-[#0A0B10] text-white">Growing (200-1000)</option>
-                            <option value="High Volume (1000+)" className="bg-[#0A0B10] text-white">High Volume (1000+)</option>
+                            <option value="High call volume (1000+)" className="bg-[#0A0B10] text-white">High call volume (1000+)</option>
                           </select>
                         </div>
 
                         <button
                           type="submit"
                           disabled={formState === 'processing'}
-                          className="w-full bg-brand hover:bg-brand-hover text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(255,106,0,0.3)] transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-wait mt-4 flex items-center justify-center gap-2 group"
+                          className="w-full bg-brand hover:bg-brand-hover text-bg-main font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(0,212,255,0.22)] transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-wait mt-4 flex items-center justify-center gap-2 group"
                         >
-                          <span>{formState === 'processing' ? 'Processing...' : 'Schedule Strategy Call'}</span>
+                          <span>{formState === 'processing' ? 'Processing...' : 'Request Intro Call'}</span>
                           {formState !== 'processing' && <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>}
                         </button>
 
                         <p className="text-center text-[10px] text-text-muted">
-                          No credit card required. Application takes less than 30 seconds.
+                          No credit card required. Takes less than 30 seconds.
                         </p>
                       </form>
                     </>

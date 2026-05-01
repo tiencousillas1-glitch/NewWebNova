@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova AI Voice | The #1 AI Receptionist for Orthodontists</title>
+    <title>Nova AI Voice | AI Receptionist for Orthodontic & Dental Practices</title>
     <meta name="description"
-        content="Stop losing high-value Invisalign patients to missed calls. Nova qualifies leads and books consultations 24/7.">
+        content="Nova AI Voice helps orthodontic and dental practices stop losing patients from missed calls with an AI voice assistant that answers, qualifies, and books consultations 24/7.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <!-- Google Search Console verification: replace VERIFICATION_CODE with the value from Google -->
     <!-- <meta name="google-site-verification" content="VERIFICATION_CODE" /> -->
@@ -15,7 +18,7 @@
     <link rel="canonical" href="https://novaaivoice.com/" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
     <meta name="author" content="Nova AI Voice" />
-    <meta name="theme-color" content="#FF6A00" />
+    <meta name="theme-color" content="#00D4FF" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Nova AI Voice" />
@@ -36,8 +39,8 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://novaaivoice.com/" />
     <meta property="og:site_name" content="Nova AI Voice" />
-    <meta property="og:title" content="Nova AI Voice | AI Receptionist for Orthodontists" />
-    <meta property="og:description" content="Stop losing Invisalign patients to missed calls. Nova answers 24/7, qualifies leads and books consultations automatically." />
+    <meta property="og:title" content="Nova AI Voice | AI Receptionist for Orthodontic & Dental Practices" />
+    <meta property="og:description" content="Nova AI Voice helps orthodontic and dental practices answer every call, qualify the right patient, and book consultations 24/7." />
     <meta property="og:image" content="https://novaaivoice.com/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -45,8 +48,8 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Nova AI Voice | AI Receptionist for Orthodontists" />
-    <meta name="twitter:description" content="Stop losing patients to missed calls. Nova works 24/7 — answers, qualifies leads and books consultations." />
+    <meta name="twitter:title" content="Nova AI Voice | AI Receptionist for Orthodontic & Dental Practices" />
+    <meta name="twitter:description" content="Stop losing patients to missed calls. Nova AI Voice answers, qualifies, and books consultations 24/7." />
     <meta name="twitter:image" content="https://novaaivoice.com/og-image.png" />
 
     <!-- Schema.org JSON-LD -->
@@ -89,7 +92,7 @@
           "@type": "Organization",
           "name": "Nova AI Voice",
           "url": "https://novaaivoice.com",
-          "logo": "https://novaaivoice.com/logo_final.png",
+          "logo": "https://novaaivoice.com/lockup-dark.svg",
           "description": "AI-powered receptionist platform built for orthodontic and dental practices.",
           "contactPoint": {
             "@type": "ContactPoint",
@@ -184,13 +187,10 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -198,51 +198,54 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        sans: ['"Space Grotesk"', 'sans-serif'],
                         mono: ['"JetBrains Mono"', 'monospace'],
                     },
                     colors: {
                         brand: {
-                            DEFAULT: '#FF6A00', // Vivid Orange
-                            hover: '#E65F00',
-                            light: '#FFB000', // Amber Accent
-                            dark: '#CC5500',
-                            50: '#fff7ed',
-                            100: '#ffedd5',
-                            200: '#fed7aa',
-                            300: '#fdba74',
-                            400: '#fb923c',
-                            500: '#f97316',
-                            600: '#ea580c',
-                            700: '#c2410c',
-                            800: '#9a3412',
-                            900: '#7c2d12',
-                            950: '#431407',
+                            DEFAULT: '#00D4FF',
+                            hover: '#36ddff',
+                            light: '#88efff',
+                            dark: '#0097bd',
+                            50: '#ebfcff',
+                            100: '#cef8ff',
+                            200: '#a7f2ff',
+                            300: '#67e8ff',
+                            400: '#36ddff',
+                            500: '#00D4FF',
+                            600: '#00a8cc',
+                            700: '#007a95',
+                            800: '#055871',
+                            900: '#0a3b4b',
+                            950: '#052732',
+                        },
+                        accent: {
+                            DEFAULT: '#FF6B35',
+                            hover: '#ff7c4d',
+                            light: '#ffb193',
+                            dark: '#d64f1f',
                         },
                         bg: {
-                            main: '#07080B', // Near Black
-                            card: '#111216',
-                            glass: 'rgba(255, 255, 255, 0.03)',
+                            main: '#0A1628',
+                            card: '#0E1E36',
+                            elevated: '#132744',
+                            paper: '#FAFAF7',
+                            glass: 'rgba(250, 250, 247, 0.04)',
                         },
                         text: {
-                            main: '#EDEFF3',
-                            muted: '#9AA3B2',
+                            main: '#FAFAF7',
+                            muted: '#B4C2D3',
+                            soft: '#7E91A8',
+                            dark: '#0A1628',
                         }
                     },
                     animation: {
                         'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 8s ease-in-out infinite',
-                        'float-delayed': 'float 8s ease-in-out 4s infinite',
                         'shimmer': 'shimmer 2.5s linear infinite',
                         'glow-line': 'glow-line 3s linear infinite',
-                        'rise': 'rise 10s infinite linear',
                         'scroll': 'scroll 60s linear infinite',
                     },
                     keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        },
                         shimmer: {
                             '0%': { backgroundPosition: '-1000px 0' },
                             '100%': { backgroundPosition: '1000px 0' },
@@ -251,106 +254,100 @@
                             '0%': { transform: 'translateX(-100%)' },
                             '100%': { transform: 'translateX(100%)' }
                         },
-                        rise: {
-                            '0%': { transform: 'translateY(100%) scale(0.5)', opacity: '0' },
-                            '20%': { opacity: '0.4' },
-                            '80%': { opacity: '0.4' },
-                            '100%': { translateY: '-20%', scale: '1', opacity: '0' },
-                        },
                         scroll: {
                             '0%': { transform: 'translateX(0)' },
                             '100%': { transform: 'translateX(-100%)' },
                         }
                     },
                     backgroundImage: {
-                        'hero-glow': 'radial-gradient(circle at center, rgba(255, 106, 0, 0.15) 0%, rgba(7, 8, 11, 0) 70%)',
-                        'card-glow': 'linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%)',
-                        'grid-pattern': 'linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)',
+                        'hero-glow': 'radial-gradient(circle at center, rgba(0, 212, 255, 0.16) 0%, rgba(10, 22, 40, 0) 68%)',
+                        'accent-glow': 'radial-gradient(circle at center, rgba(255, 107, 53, 0.16) 0%, rgba(10, 22, 40, 0) 70%)',
+                        'card-glow': 'linear-gradient(180deg, rgba(250, 250, 247, 0.08) 0%, rgba(250, 250, 247, 0) 100%)',
+                        'grid-pattern': 'linear-gradient(to right, rgba(180, 194, 211, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(180, 194, 211, 0.08) 1px, transparent 1px)',
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Custom Utilities */
         body {
-            background-color: #07080B;
-            color: #EDEFF3;
-            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(0, 212, 255, 0.12), transparent 32%),
+                radial-gradient(circle at 85% 20%, rgba(255, 107, 53, 0.08), transparent 24%),
+                #0A1628;
+            color: #FAFAF7;
+            font-family: 'Space Grotesk', sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(180deg, rgba(14, 30, 54, 0.92), rgba(10, 22, 40, 0.88));
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(180, 194, 211, 0.12);
+            box-shadow: 0 24px 80px rgba(4, 10, 19, 0.36);
         }
 
-        /* Modern Glass Card from Nedzo Design */
         .glass-card {
-            background: rgba(11, 15, 25, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            background: rgba(12, 26, 47, 0.74);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(180, 194, 211, 0.12);
+            box-shadow: 0 20px 60px rgba(1, 7, 18, 0.3);
             transition: all 0.3s ease;
         }
 
         .glass-card:hover {
-            border-color: rgba(255, 106, 0, 0.3);
-            box-shadow: 0 0 40px rgba(255, 106, 0, 0.15);
+            border-color: rgba(0, 212, 255, 0.28);
+            box-shadow: 0 24px 80px rgba(0, 212, 255, 0.12);
         }
 
         .glass-card-dark {
-            background: rgba(2, 4, 10, 0.8);
+            background: rgba(8, 19, 35, 0.88);
             backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(180, 194, 211, 0.1);
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #fff 0%, #FFB000 100%);
+            background: linear-gradient(120deg, #FAFAF7 0%, #88efff 45%, #FF6B35 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 106, 0, 0.3);
+            text-shadow: 0 0 24px rgba(0, 212, 255, 0.18);
         }
 
         .text-glow {
-            text-shadow: 0 0 20px rgba(255, 106, 0, 0.3);
+            text-shadow: 0 0 18px rgba(0, 212, 255, 0.18);
         }
 
-        /* Toggle Switch */
         .toggle-checkbox:checked {
             right: 0;
-            border-color: #FF6A00;
+            border-color: #00D4FF;
         }
 
         .toggle-checkbox:checked+.toggle-label {
-            background-color: #FF6A00;
+            background: linear-gradient(90deg, #00D4FF, #FF6B35);
         }
 
-        /* Smooth Scroll Padding */
         section {
             scroll-margin-top: 5rem;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #07080B;
+            background: #0A1628;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #1e293b;
+            background: #28496d;
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #FF6A00;
+            background: #00D4FF;
         }
 
         .no-scrollbar::-webkit-scrollbar {
@@ -361,9 +358,102 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        .voice-bar {
+            transform-origin: center;
+            animation: voice-bar 1.4s ease-in-out infinite;
+        }
+
+        .voice-bar:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .voice-bar:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .voice-bar:nth-child(4) {
+            animation-delay: 0.45s;
+        }
+
+        .voice-bar:nth-child(5) {
+            animation-delay: 0.6s;
+        }
+
+        .demo-flow-card {
+            animation: demo-flow-card 6s ease-in-out infinite;
+        }
+
+        .demo-flow-card.answer {
+            animation-delay: 2s;
+        }
+
+        .demo-flow-card.book {
+            animation-delay: 4s;
+        }
+
+        .demo-ring {
+            animation: demo-ring 2s ease-out infinite;
+        }
+
+        .demo-phone-tilt {
+            animation: demo-phone-tilt 7s ease-in-out infinite;
+        }
+
+        @keyframes voice-bar {
+            0%, 100% {
+                transform: scaleY(0.45);
+                opacity: 0.55;
+            }
+
+            50% {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes demo-flow-card {
+            0%, 100% {
+                opacity: 0.54;
+                transform: translateY(0);
+                border-color: rgba(180, 194, 211, 0.12);
+            }
+
+            12%, 32% {
+                opacity: 1;
+                transform: translateY(-6px);
+                border-color: rgba(0, 212, 255, 0.42);
+            }
+
+            42% {
+                opacity: 0.62;
+                transform: translateY(0);
+                border-color: rgba(180, 194, 211, 0.12);
+            }
+        }
+
+        @keyframes demo-ring {
+            0% {
+                transform: scale(0.78);
+                opacity: 0.55;
+            }
+
+            100% {
+                transform: scale(1.55);
+                opacity: 0;
+            }
+        }
+
+        @keyframes demo-phone-tilt {
+            0%, 100% {
+                transform: translateY(0) rotate(-1.5deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(1deg);
+            }
+        }
     </style>
-
-
 </head>
 
 <body>
